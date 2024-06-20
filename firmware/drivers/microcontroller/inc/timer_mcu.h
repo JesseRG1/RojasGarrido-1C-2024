@@ -75,6 +75,12 @@ void TimerStop(timer_mcu_t timer);
  */
 void TimerReset(timer_mcu_t timer);
 
+/**
+ * @brief Config period timer after init
+ * 
+ * @param timer Timer number
+ */
+void TimerConfig(timer_config_t *timer_ini);
 /** @} doxygen end group definition */
 /** @} doxygen end group definition */
 /** @} doxygen end group definition */

@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "Guia1_ej4",
-    "project_version":    "9280b3a-dirty",
+    "project_version":    "289ad8c-dirty",
     "project_path":       "C:/Repositorios/RojasGarrido-1C-2024/firmware/projects/Guia1_ej4",
     "idf_path":           "C:/Users/Jesse/esp/v5.1.2/esp-idf",
     "build_dir":          "C:/Repositorios/RojasGarrido-1C-2024/firmware/projects/Guia1_ej4/build",
@@ -170,12 +170,12 @@
             "dir": "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers",
             "type": "LIBRARY",
             "lib": "__idf_drivers",
-            "reqs": [ "driver", "esp_adc" ],
+            "reqs": [ "driver", "esp_adc", "nvs_flash", "bt" ],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Repositorios/RojasGarrido-1C-2024/firmware/projects/Guia1_ej4/build/esp-idf/drivers/libdrivers.a",
-            "sources": [ "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/gpio_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/delay_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/timer_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/uart_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/spi_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/pwm_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/i2c_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/gpio_fast_out_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/analog_io_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/led.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/switch.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/lcditse0803.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/hc_sr04.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/ws2812b.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/neopixel_stripe.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/ili9341.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/fonts.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/servo_sg90.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/hx711.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/mpu6050.c" ],
+            "sources": [ "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/gpio_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/delay_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/timer_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/uart_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/gpio_fast_out_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/analog_io_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/microcontroller/src/rtc_mcu.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/led.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/switch.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/lcditse0803.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/hc_sr04.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/ws2812b.c", "C:/Repositorios/RojasGarrido-1C-2024/firmware/drivers/devices/src/neopixel_stripe.c" ],
             "include_dirs": [ "microcontroller/inc", "devices/inc" ]
         },
         "efuse": {
