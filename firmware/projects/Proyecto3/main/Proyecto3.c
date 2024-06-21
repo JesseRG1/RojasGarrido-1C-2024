@@ -1,8 +1,8 @@
 /*! @mainpage Proyecto Integrador
  *
- * @section Audiometro
+ * @section AUDIOMETRO
  *
- * El objetivo del siguiente programa es tomar distintas mediciones de frecuencias a diferentes amplitudes
+ * El objetivo del siguiente programa es tomar distintas mediciones de amplitudes a diferentes frecuencias
  * para poder realizar la grafica audiometrica correspondiente
  *
  * <a href="https://drive.google.com/...">Operation Example</a>
@@ -11,7 +11,7 @@
  *
  * |    Peripheral  |   ESP32   	|
  * |:--------------:|:--------------|
- * | 	PIN_X	 	| 	GPIO_X		|
+ * | 	PIN_X	 	| 	GPIO_0		|
  *
  *
  * @section changelog Changelog
@@ -56,7 +56,7 @@
 #define CONFIG_BLINK_PERIOD_TIMER_SENIAL 125000
 
 #define LED_BT LED_1
-#define CHUNK 4
+
 /*==================[internal data definition]===============================*/
 /** llamada a tarea Modificar señal*/
 TaskHandle_t Modificar_task_handle = NULL;
@@ -76,7 +76,7 @@ uint8_t sine_wave[BUFFER_SIZE] = {
 uint16_t frecuencia[7] = {
     125, 250, 500, 1000,
     2000, 4000, 8000};
-float volumen_audiometria[7];
+float Volumen_OI[7];
 /** variables enteras para el uso de los programas*/
 uint8_t periodo = CONFIG_BLINK_PERIOD_TIMER_SENIAL, punto = 0;
 float volumen = 0.1;
@@ -90,21 +90,18 @@ timer_config_t timer_Senial;
  */
 void GuardarMedicion(void)
 {
-    volumen_audiometria[punto] = volumen;
+    Volumen_OI[punto] = volumen;
     punto++;
     if (punto == 7)
     {
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-        char msg[128];
-        static uint8_t indice = 0;
-        for (uint8_t i = 0; i < CHUNK; i++)
+        char msg[48];
+        for (int16_t i = 0; i < 7; i++)
         {
-            sprintf(msg, "*P%.2f*", volumen_audiometria[i]);
+            /* Formato de datos para que sean graficados en la aplicación móvil */
+            sprintf(msg, "*PX%dY%.2f*\n", frecuencia[i], Volumen_OI[i]);
             BleSendString(msg);
         }
-        BleSendString(msg);
     }
-
 } // ver de guardar datos con las teclas de la placa o el bluetooth
 
 /**
@@ -113,12 +110,11 @@ void GuardarMedicion(void)
  * @param [in]
  * @return
  */
-void ModificarPeriodo(void)
+void ModificarPeriodo()
 {
 
-    periodo = periodo / 2;
-    // la señal disminuye su aplitud, por el filtro que el dac tiene a la salida
-    // volumen = 0.1; // reinicia el volumen en cada frecuencia
+    periodo = periodo / 2; // la señal disminuye su aMplitud, por el filtro que el dac tiene a la salida
+    volumen = volumen * 2; // le multiplico x2 la señal compensando el filtro del dac
 
     TimerStop(timer_Senial.timer);
     timer_Senial.period = periodo;
@@ -167,7 +163,7 @@ void Teclas(void *param)
         switch (teclas)
         {
         case SWITCH_1:
-            //GuardarMedicion();
+            GuardarMedicion();
             ModificarPeriodo();
             printf("se modifico periodo,%d\n\r", periodo);
             break;
@@ -177,9 +173,20 @@ void Teclas(void *param)
             printf("se modifico volumen %.2f\n\r", volumen);
             break;
         }
-
-    } // ver de hacer en los switches del bluetooth
+    }
 }
+/*void BotonBluetooth(uint8_t *data, uint8_t lenght)
+{
+    switch (data[0])
+    {
+    case 'B':
+        GuardarMedicion();
+        break;
+    case 'b':
+        break;
+    }
+}*/
+
 /** @brief Tarea encargada del timer de la señal */
 void FuncTimerSenial(void *param)
 {
@@ -191,20 +198,21 @@ void FuncTimerTeclas(void *param)
     xTaskNotifyGive(Modificar_task_handle);
 }
 
-
 /*==================[external functions definition]==========================*/
 void app_main(void)
 {
+    // se inicializa el bluetooth
     ble_config_t ble_configuration = {
         "AUDIOMETRIA",
-        NULL};
+       //BotonBluetooth
+            NULL};
     static neopixel_color_t color;
     LedsInit();
     BleInit(&ble_configuration);
     /* Se inicializa el LED RGB de la placa */
     NeoPixelInit(BUILT_IN_RGB_LED_PIN, BUILT_IN_RGB_LED_LENGTH, &color);
-    NeoPixelAllOff();
 
+    // Inicializamos Timers
     timer_config_t timer_teclas = {
         .timer = TIMER_A,
         .period = CONFIG_BLINK_PERIOD_TECLAS,
@@ -220,15 +228,21 @@ void app_main(void)
     TimerInit(&timer_teclas);
     TimerInit(&timer_Senial);
 
+    // Inicializamos salida Analogica
     AnalogOutputInit();
+
+    // inicilizamos Switches
     SwitchesInit();
 
-    xTaskCreate(&MandarSenial, "señal", 4096, NULL, 5, &MandarSenial_task_handle);  // lo unico que anda
-    xTaskCreate(&Teclas, "Modificar Señal", 4096, NULL, 5, &Modificar_task_handle); // ahora tambien anda
+    xTaskCreate(&MandarSenial, "señal", 115200, NULL, 5, &MandarSenial_task_handle);
+    xTaskCreate(&Teclas, "Modificar Señal", 115200, NULL, 5, &Modificar_task_handle);
+
     TimerStart(timer_teclas.timer);
     TimerStart(timer_Senial.timer);
     printf("inicio \r\n");
+    NeoPixelAllOff();
 
+    // CONFIGURACION DE ENCENDIDO Y APAGADO DEL BLUETOOTH
     while (1)
     {
         vTaskDelay(CONFIG_BLINK_PERIOD_TIMER_SENIAL / portTICK_PERIOD_MS);
