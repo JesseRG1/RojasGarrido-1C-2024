@@ -113,8 +113,8 @@ void GuardarMedicion(void)
 void ModificarPeriodo()
 {
 
-    periodo = periodo / 2; // la señal disminuye su aMplitud, por el filtro que el dac tiene a la salida
-    volumen = volumen * 2; // le multiplico x2 la señal compensando el filtro del dac
+    periodo = periodo * 2; // la señal disminuye su aMplitud, por el filtro que el dac tiene a la salida
+    //volumen = volumen * 2; // le multiplico x2 la señal compensando el filtro del dac
 
     TimerStop(timer_Senial.timer);
     timer_Senial.period = periodo;
@@ -157,6 +157,7 @@ void Teclas(void *param)
 {
     while (1)
     {
+        char msg1,msg2;
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
         uint8_t teclas;
         teclas = SwitchesRead();
@@ -165,12 +166,14 @@ void Teclas(void *param)
         case SWITCH_1:
             GuardarMedicion();
             ModificarPeriodo();
-            printf("se modifico periodo,%d\n\r", periodo);
+            //sprintf(msg1,"se modifico periodo,%d\n\r", periodo);
+            //BleSendString(msg1);
             break;
         case SWITCH_2:
             volumen = 0.1 + volumen;
             ModificarVolumen(volumen);
-            printf("se modifico volumen %.2f\n\r", volumen);
+            //sprintf(msg2,"se modifico volumen %.2f\n\r", volumen);
+            //BleSendString(msg2);
             break;
         }
     }
